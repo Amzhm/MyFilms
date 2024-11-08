@@ -15,8 +15,8 @@ export default function DashboardLayout({ children }: PropsWithChildren) {
           'divider divider'
           'sidebar content'
         `,
-                gridTemplateColumns: '200px 1fr', // Sidebar à 200px et le contenu principal prenant le reste
-                gridTemplateRows: '40px 2px 1fr', // Header de 40px, ligne de 2px, et le reste pour le contenu
+                gridTemplateColumns: '300px 1fr', // Sidebar à 200px et le contenu principal prenant le reste
+                gridTemplateRows: '50px 2px 1fr', // Header de 40px, ligne de 2px, et le reste pour le contenu
             }}
         >
             <Header>
