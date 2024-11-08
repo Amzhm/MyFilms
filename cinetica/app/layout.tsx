@@ -18,13 +18,11 @@ const geistMono = localFont({
 export default function RootLayout({
                                        children,
                                    }: Readonly<{ children: React.ReactNode }>) {
-    const [isDark, setIsDark] = useState(false);
+                                    
+    const [isDark, setIsDark] = useState(window.matchMedia('(prefers-color-scheme: dark)').matches);
 
     // Vérifie les préférences du système au moment du premier rendu
     useEffect(() => {
-        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-        setIsDark(prefersDark); // Applique le mode sombre ou clair selon la préférence de l'utilisateur
-
         // Écoute les changements de préférence de couleur
         const mediaQueryListener = (e: MediaQueryListEvent) => {
             setIsDark(e.matches);
@@ -32,9 +30,6 @@ export default function RootLayout({
 
         window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', mediaQueryListener);
 
-        return () => {
-            window.matchMedia('(prefers-color-scheme: dark)').removeEventListener('change', mediaQueryListener);
-        };
     }, []);
 
     useEffect(() => {
@@ -46,7 +41,7 @@ export default function RootLayout({
     }, [isDark]);
 
     return (
-        <html lang="en">
+        <html lang="fr">
         <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
         {children}
         </body>

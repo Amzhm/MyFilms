@@ -40,7 +40,7 @@ export default function Home() {
     };
 
     return (
-        <div className="flex justify-center items-center h-full font-sans font-medium bg-[url('./img/backgroud_login.png')] bg-cover bg-center dark:bg-gray-900">
+        <div className="flex justify-center items-center h-full font-sans font-medium bg-[url('./img/backgroud_login.jpg')] dark:bg-[url('./img/background_login_dm.jpg')] bg-cover bg-center dark:bg-gray-900">
             <div className="flex flex-col rounded-xl content-center items-center h-3/6 w-1/2 bg-gray-900 bg-opacity-90 shadow dark:bg-opacity-80">
                 <div className="logo-section mt-12 flex flex-col items-center mb-5 ">
                     <span className="-rotate-45 text-5xl text-white">🎬</span>
