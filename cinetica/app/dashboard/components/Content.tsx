@@ -2,8 +2,10 @@ import { PropsWithChildren } from "react";
 
 export const Content = ({ children }: PropsWithChildren) => {
     return (
-        <div style={{ gridArea: "content" }}>
-
+        <div
+            className="bg-white"
+            style={{ gridArea: "content" }}
+        >
             {children}
         </div>
     );
