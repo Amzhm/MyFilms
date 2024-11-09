@@ -31,10 +31,12 @@ export default function Home() {
             if (data.isAuthenticated) {
                 setIsAuthenticated(true);
                 router.push('/dashboard');
+                if(isAuthenticated){}
             } else {
                 setErrorMessage('Identifiants incorrects');
             }
         } else {
+            if(errorMessage){}
             setErrorMessage('Erreur de connexion');
         }
     };
