@@ -10,6 +10,8 @@ export default function DashboardLayout({ children }: PropsWithChildren) {
     const [isSidebarVisible, setIsSidebarVisible] = useState<boolean>(false);
 
     useEffect(() => {
+        if (typeof window === 'undefined') return; // Vérifie que `window` est défini
+
         const handleResize = () => {
             if (window.innerWidth >= 1024) {
                 setIsSidebarVisible(true);
@@ -22,6 +24,7 @@ export default function DashboardLayout({ children }: PropsWithChildren) {
         window.addEventListener('resize', handleResize);
         return () => window.removeEventListener('resize', handleResize);
     }, []);
+
 
     const toggleSidebar = () => {
         setIsSidebarVisible(prev => !prev);
