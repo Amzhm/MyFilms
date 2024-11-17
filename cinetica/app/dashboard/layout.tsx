@@ -8,9 +8,14 @@ import { Menu, X } from 'lucide-react';
 
 export default function DashboardLayout({ children }: PropsWithChildren) {
     const [isSidebarVisible, setIsSidebarVisible] = useState<boolean>(false);
+    const [isClient, setIsClient] = useState<boolean>(false); // Indique si on est côté client
 
     useEffect(() => {
-        if (typeof window === 'undefined') return; // Vérifie que `window` est défini
+        setIsClient(true); // Définit que nous sommes maintenant côté client
+    }, []);
+
+    useEffect(() => {
+        if (!isClient) return; // Ne pas exécuter avant le côté client
 
         const handleResize = () => {
             if (window.innerWidth >= 1024) {
@@ -20,11 +25,10 @@ export default function DashboardLayout({ children }: PropsWithChildren) {
             }
         };
 
-        handleResize();
-        window.addEventListener('resize', handleResize);
-        return () => window.removeEventListener('resize', handleResize);
-    }, []);
-
+        handleResize(); // Définir l'état initial de la sidebar
+        window.addEventListener('resize', handleResize); // Écoute du redimensionnement
+        return () => window.removeEventListener('resize', handleResize); // Nettoyage
+    }, [isClient]);
 
     const toggleSidebar = () => {
         setIsSidebarVisible(prev => !prev);
