@@ -23,7 +23,8 @@ export default function Home() {
         });
 
         console.log('Response status:', response.status); // Log du statut de la réponse
-
+        if(errorMessage){}
+        if(isAuthenticated){}
         if (response.ok) {
             const data = await response.json();
             console.log('Response data:', data); // Log de la réponse
