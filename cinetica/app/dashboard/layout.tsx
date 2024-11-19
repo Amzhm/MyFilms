@@ -7,7 +7,8 @@ import { Content } from './components/Content';
 import { Menu, X, Search, Bell, User, Film, Tv, Star, Clapperboard } from 'lucide-react';
 
 export default function DashboardLayout({ children }: PropsWithChildren) {
-    const [isSidebarVisible, setIsSidebarVisible] = useState<boolean>(false);
+    const [isCollapsed, setIsCollapsed] = useState<boolean>(true);
+    const [isMobile, setIsMobile] = useState<boolean>(false);
     const [isClient, setIsClient] = useState<boolean>(false);
 
     useEffect(() => {
@@ -18,10 +19,10 @@ export default function DashboardLayout({ children }: PropsWithChildren) {
         if (!isClient) return;
 
         const handleResize = () => {
-            if (window.innerWidth >= 1024) {
-                setIsSidebarVisible(true);
-            } else {
-                setIsSidebarVisible(false);
+            const mobile = window.innerWidth < 1024;
+            setIsMobile(mobile);
+            if (mobile) {
+                setIsCollapsed(true);
             }
         };
 
@@ -31,34 +32,55 @@ export default function DashboardLayout({ children }: PropsWithChildren) {
     }, [isClient]);
 
     const toggleSidebar = () => {
-        setIsSidebarVisible(prev => !prev);
+        setIsCollapsed(prev => !prev);
     };
 
     return (
         <div className="h-screen w-screen bg-white dark:bg-black text-neutral-900 dark:text-white overflow-hidden font-sans">
+            
+            {isMobile && !isCollapsed && (
+                <div 
+                    className="fixed inset-0 bg-black bg-opacity-50 z-40 transition-opacity duration-500 ease-in-out"
+                    onClick={toggleSidebar}
+                />
+            )}
+
             <div
-                className="h-full w-full grid transition-all duration-300 ease-in-out dark:bg-black"
+                className="h-full w-full grid transition-all duration-500 ease-[cubic-bezier(0.4,0,0.2,1)] dark:bg-black" /*courbe de bezier effet naturel*/
                 style={{
                     gridTemplateAreas: `
                         'header header'
                         'divider divider'
                         'sidebar content'
                     `,
-                    gridTemplateColumns: isSidebarVisible ? '280px 1fr' : '0px 1fr',
+                    gridTemplateColumns: isCollapsed ? '80px 1fr' : '280px 1fr',
                     gridTemplateRows: '64px 1px 1fr',
                 }}
             >
                 {/* Header */}
-                <Header >
+                <Header>
                     <div className="flex justify-between items-center w-full px-6 dark:bg-black">
-                        <div className="flex items-center space-x-3 dark:bg-blackw">
+                        <div className="flex items-center space-x-3 dark:bg-black">
+                            {/* Bouton toggle pour mobile */}
+                            {isMobile && (
+                                <button
+                                    onClick={toggleSidebar}
+                                    className="p-2 mr-2 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors duration-300 lg:hidden"
+                                >
+                                    {isCollapsed ? (
+                                        <Menu className="w-6 h-6 text-gray-700 dark:text-white" />
+                                    ) : (
+                                        <X className="w-6 h-6 text-gray-700 dark:text-white" />
+                                    )}
+                                </button>
+                            )}
                             <Clapperboard size={28} className="text-neutral-700 dark:text-white" />
                             <h1 className="text-2xl font-black tracking-tight text-neutral-900 dark:text-white">
                                 CINETICA
                             </h1>
                         </div>
                         <div className="flex items-center space-x-4 dark:bg-black">
-                            <div className="relative group dark:bg-black">
+                            <div className="relative group dark:bg-black hidden sm:block">
                                 <input 
                                     placeholder="Search movies, series..." 
                                     className="w-72 px-4 py-2 pl-10 rounded-xl 
@@ -68,7 +90,7 @@ export default function DashboardLayout({ children }: PropsWithChildren) {
                                     focus:ring-2 focus:ring-neutral-300 
                                     dark:focus:ring-neutral-600
                                     focus:border-transparent 
-                                    transition-all duration-200"
+                                    transition-all duration-300"
                                 />
                                 <Search 
                                     className="absolute left-3 top-1/2 transform -translate-y-1/2 
@@ -93,49 +115,31 @@ export default function DashboardLayout({ children }: PropsWithChildren) {
                 {/* Divider */}
                 <div
                     style={{ gridArea: 'divider' }}
-                    className="bg-neutral-200 dark:bg-black"
+                    className="bg-neutral-200 dark:bg-neutral-800"
                 />
 
                 {/* Sidebar */}
                 <div 
                     className={`
-                        transition-all duration-300 transform
-                        ${isSidebarVisible ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}
+                        transition-all duration-500 ease-[cubic-bezier(0.4,0,0.2,1)]
                         fixed lg:relative
                         lg:block
                         z-50 lg:z-auto
                         h-full
                         bg-white dark:bg-black
-                        shadow-lg
+                        shadow-lg lg:shadow-none
+                        ${isMobile && isCollapsed ? '-translate-x-full' : 'translate-x-0'}
                     `}
-                    style={{ width: '280px' }}
+                    style={{ 
+                        width: isCollapsed ? '80px' : '280px',
+                    }}
                 >
-                    <Sidebar />
-                    {isSidebarVisible && (
-                        <button
-                            className="absolute top-4 right-4 p-2 rounded-full 
-                            bg-neutral-100 dark:bg-neutral-800 
-                            hover:bg-neutral-200 dark:hover:bg-neutral-700 
-                            text-neutral-600 dark:text-white 
-                            hover:text-neutral-900 dark:hover:text-white 
-                            transition-all duration-200 lg:hidden"
-                            onClick={toggleSidebar}
-                        >
-                            <X className="w-5 h-5" />
-                        </button>
-                    )}
+                    <Sidebar 
+                        isCollapsed={isCollapsed}
+                        onToggle={() => !isMobile && setIsCollapsed(prev => !prev)}
+                        isMobile={isMobile}
+                    />
                 </div>
-
-                {!isSidebarVisible && (
-                    <button
-                        className="fixed top-[80px] left-4 p-3 bg-white dark:bg-neutral-800 shadow-md 
-                        text-neutral-700 dark:text-white rounded-full z-40 
-                        hover:bg-neutral-100 dark:hover:bg-neutral-700 transition-all duration-200 lg:hidden"
-                        onClick={toggleSidebar}
-                    >
-                        <Menu className="w-5 h-5" />
-                    </button>
-                )}
 
                 {/* Content */}
                 <Content>
