@@ -1,23 +1,17 @@
+// app/dashboard/layout.tsx
 'use client';
 
 import { PropsWithChildren, useState, useEffect } from 'react';
 import { Header } from './components/Header';
 import { Sidebar } from './components/Sidebar';
 import { Content } from './components/Content';
-import { Menu, X, Search, Bell, User, Film, Tv, Star, Clapperboard } from 'lucide-react';
+import { Menu, X, Search, Bell, User, Clapperboard } from 'lucide-react';
 
 export default function DashboardLayout({ children }: PropsWithChildren) {
     const [isCollapsed, setIsCollapsed] = useState<boolean>(true);
     const [isMobile, setIsMobile] = useState<boolean>(false);
-    const [isClient, setIsClient] = useState<boolean>(false);
 
     useEffect(() => {
-        setIsClient(true);
-    }, []);
-
-    useEffect(() => {
-        if (!isClient) return;
-
         const handleResize = () => {
             const mobile = window.innerWidth < 1024;
             setIsMobile(mobile);
@@ -29,15 +23,14 @@ export default function DashboardLayout({ children }: PropsWithChildren) {
         handleResize();
         window.addEventListener('resize', handleResize);
         return () => window.removeEventListener('resize', handleResize);
-    }, [isClient]);
+    }, []);
 
     const toggleSidebar = () => {
         setIsCollapsed(prev => !prev);
     };
 
     return (
-        <div className="h-screen w-screen bg-white dark:bg-black text-neutral-900 dark:text-white overflow-hidden font-sans">
-            
+        <div className="min-h-screen w-screen bg-white dark:bg-black text-neutral-900 dark:text-white font-sans">
             {isMobile && !isCollapsed && (
                 <div 
                     className="fixed inset-0 bg-black bg-opacity-50 z-40 transition-opacity duration-500 ease-in-out"
@@ -46,7 +39,7 @@ export default function DashboardLayout({ children }: PropsWithChildren) {
             )}
 
             <div
-                className="h-full w-full grid transition-all duration-500 ease-[cubic-bezier(0.4,0,0.2,1)] dark:bg-black" /*courbe de bezier effet naturel*/
+                className="min-h-screen w-full grid transition-all duration-500 ease-[cubic-bezier(0.4,0,0.2,1)] dark:bg-black"
                 style={{
                     gridTemplateAreas: `
                         'header header'
@@ -61,7 +54,6 @@ export default function DashboardLayout({ children }: PropsWithChildren) {
                 <Header>
                     <div className="flex justify-between items-center w-full px-6 dark:bg-black">
                         <div className="flex items-center space-x-3 dark:bg-black">
-                            {/* Bouton toggle pour mobile */}
                             {isMobile && (
                                 <button
                                     onClick={toggleSidebar}
@@ -122,10 +114,11 @@ export default function DashboardLayout({ children }: PropsWithChildren) {
                 <div 
                     className={`
                         transition-all duration-500 ease-[cubic-bezier(0.4,0,0.2,1)]
-                        fixed lg:relative
+                        fixed lg:sticky
                         lg:block
+                        top-0
                         z-50 lg:z-auto
-                        h-full
+                        h-screen
                         bg-white dark:bg-black
                         shadow-lg lg:shadow-none
                         ${isMobile && isCollapsed ? '-translate-x-full' : 'translate-x-0'}
@@ -143,35 +136,9 @@ export default function DashboardLayout({ children }: PropsWithChildren) {
 
                 {/* Content */}
                 <Content>
-                    <div className="p-6 max-w-7xl mx-auto space-y-8 dark:bg-black">
-                        <div className="grid grid-cols-1 gap-8 dark:bg-black">
-                            <div className="bg-white dark:bg-black rounded-xl shadow-md p-6 border border-neutral-100 dark:border-neutral-800">
-                                <div className="flex items-center mb-4 space-x-3">
-                                    <Film className="text-neutral-700 dark:text-white" />
-                                    <h2 className="text-xl font-bold text-neutral-800 dark:text-white">Box Office Movies</h2>
-                                </div>
-                                <p className="text-neutral-600 dark:text-neutral-300">Top trending and highest-grossing movies</p>
-                            </div>
-
-                            <div className="bg-white dark:bg-black rounded-xl shadow-md p-6 border border-neutral-100 dark:border-neutral-800">
-                                <div className="flex items-center mb-4 space-x-3">
-                                    <Tv className="text-neutral-700 dark:text-white" />
-                                    <h2 className="text-xl font-bold text-neutral-800 dark:text-white">Popular TV Series</h2>
-                                </div>
-                                <p className="text-neutral-600 dark:text-neutral-300">Currently trending TV shows and series</p>
-                            </div>
-
-                            <div className="bg-white dark:bg-black rounded-xl shadow-md p-6 border border-neutral-100 dark:border-neutral-800">
-                                <div className="flex items-center mb-4 space-x-3">
-                                    <Star className="text-neutral-700 dark:text-white" />
-                                    <h2 className="text-xl font-bold text-neutral-800 dark:text-white">Recommended for You</h2>
-                                </div>
-                                <p className="text-neutral-600 dark:text-neutral-300">Personalized movie and series recommendations</p>
-                            </div>
-                        </div>
-
+                    <main className="w-full">
                         {children}
-                    </div>
+                    </main>
                 </Content>
             </div>
         </div>
