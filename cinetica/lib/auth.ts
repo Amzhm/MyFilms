@@ -1,6 +1,8 @@
 // lib/auth.ts
 import { DefaultSession, AuthOptions } from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials';
+import bcrypt from 'bcryptjs';
+import { user } from '@/repository/user';
 
 declare module "next-auth" {
     interface User {
@@ -27,13 +29,8 @@ export const authOptions: AuthOptions = {
                 if (!credentials?.username || !credentials?.password) return null;
                 
                 try {
-                    // Pas besoin de faire un fetch, on peut directement vérifier
                     const { username, password } = credentials;
                     
-                    // Import direct du user et bcrypt
-                    const bcrypt = require('bcryptjs');
-                    const { user } = require('@/repository/user');
-
                     if (username === user.username && bcrypt.compareSync(password, user.password)) {
                         return {
                             id: '1',
