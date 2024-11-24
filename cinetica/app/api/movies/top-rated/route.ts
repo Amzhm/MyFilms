@@ -1,23 +1,26 @@
+import { getServerSession } from "next-auth";
+import { authOptions } from '@/lib/auth';
 import { NextResponse } from 'next/server';
 
 export async function GET() {
-    const TMDB_API_KEY = process.env.TMDB_API_KEY;
-
-    if (!TMDB_API_KEY) {
-        return NextResponse.json({ error: 'TMDB API key is missing' }, { status: 500 });
+    const session = await getServerSession(authOptions);
+    
+    if (!session?.user?.apiKey) {
+        return NextResponse.json({ error: 'Non autorisé' }, { status: 401 });
     }
 
     try {
-        const response = await fetch(`https://api.themoviedb.org/3/movie/top_rated?api_key=${TMDB_API_KEY}&language=en-US&page=1`);
+        const response = await fetch(
+            `https://api.themoviedb.org/3/movie/top_rated?api_key=${session.user.apiKey}&language=fr-FR&page=1`
+        );
 
         if (!response.ok) {
-            return NextResponse.json({ error: 'Failed to fetch data from TMDB' }, { status: response.status });
+            return NextResponse.json({ error: 'Erreur TMDB' }, { status: response.status });
         }
 
         const data = await response.json();
-        return NextResponse.json(data, { status: 200 });
-    } catch (error) {
-        console.error(error);
-        return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
+        return NextResponse.json(data);
+    } catch {
+        return NextResponse.json({ error: 'Erreur serveur' }, { status: 500 });
     }
 }
