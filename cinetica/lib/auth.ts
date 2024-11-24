@@ -1,4 +1,4 @@
-// /lib/auth.ts
+// lib/auth.ts
 import { DefaultSession, AuthOptions } from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials';
 
@@ -27,15 +27,14 @@ export const authOptions: AuthOptions = {
                 if (!credentials?.username || !credentials?.password) return null;
                 
                 try {
-                    const response = await fetch(`${process.env.NEXTAUTH_URL}/api/Authentification`, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify(credentials),
-                    });
-
-                    const data = await response.json();
+                    // Pas besoin de faire un fetch, on peut directement vérifier
+                    const { username, password } = credentials;
                     
-                    if (data.isAuthenticated) {
+                    // Import direct du user et bcrypt
+                    const bcrypt = require('bcryptjs');
+                    const { user } = require('@/repository/user');
+
+                    if (username === user.username && bcrypt.compareSync(password, user.password)) {
                         return {
                             id: '1',
                             username: credentials.username,
@@ -43,12 +42,17 @@ export const authOptions: AuthOptions = {
                         };
                     }
                     return null;
-                } catch {
+                } catch (error) {
+                    console.error("Auth error:", error);
                     return null;
                 }
             }
         })
     ],
+    session: {
+        strategy: "jwt",
+        maxAge: 2 * 60 * 60,
+    },
     pages: {
         signIn: '/login',
         error: '/login',

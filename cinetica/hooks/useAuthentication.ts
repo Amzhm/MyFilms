@@ -27,6 +27,7 @@ export function useAuthentication() {
                 setError('Identifiants incorrects');
             }
         } catch (e) {
+            console.error(e);
             setError('Erreur de connexion');
         } finally {
             setIsLoading(false);
