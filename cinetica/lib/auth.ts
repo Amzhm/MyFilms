@@ -1,8 +1,6 @@
-// lib/auth.ts
+// /lib/auth.ts
 import { DefaultSession, AuthOptions } from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials';
-import bcrypt from 'bcryptjs';
-import { user } from '@/repository/user';
 
 declare module "next-auth" {
     interface User {
@@ -26,42 +24,31 @@ export const authOptions: AuthOptions = {
                 password: { label: "Password", type: "password" }
             },
             async authorize(credentials) {
-                if (!credentials?.username || !credentials?.password) {
-                    console.log("Missing credentials");
-                    return null;
-                }
+                if (!credentials?.username || !credentials?.password) return null;
                 
                 try {
-                    const { username, password } = credentials;
-                    console.log("Auth attempt:", { username });
+                    const response = await fetch(`${process.env.NEXTAUTH_URL}/api/Authentification`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(credentials),
+                    });
+
+                    const data = await response.json();
                     
-                    const match = await bcrypt.compare(password, user.password);
-                    console.log("Password match:", match);
-                    
-                    if (username === user.username && match) {
-                        const userData = {
+                    if (data.isAuthenticated) {
+                        return {
                             id: '1',
                             username: credentials.username,
                             apiKey: process.env.TMDB_API_KEY || ''
                         };
-                        console.log("Auth successful:", userData);
-                        return userData;
                     }
-                    
-                    console.log("Auth failed");
                     return null;
-                } catch (error) {
-                    console.error("Auth error:", error);
+                } catch {
                     return null;
                 }
             }
         })
     ],
-    debug: true,  // Active les logs détaillés
-    session: {
-        strategy: "jwt",
-        maxAge: 2 * 60 * 60,
-    },
     pages: {
         signIn: '/login',
         error: '/login',

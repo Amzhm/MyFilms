@@ -1,3 +1,4 @@
+// app/api/movies/top-rated/route.ts (et similar pour popular et now-playing)
 import { getServerSession } from "next-auth";
 import { authOptions } from '@/lib/auth';
 import { NextResponse } from 'next/server';
