@@ -26,18 +26,29 @@ export const authOptions: AuthOptions = {
                 password: { label: "Password", type: "password" }
             },
             async authorize(credentials) {
-                if (!credentials?.username || !credentials?.password) return null;
+                if (!credentials?.username || !credentials?.password) {
+                    console.log("Missing credentials");
+                    return null;
+                }
                 
                 try {
                     const { username, password } = credentials;
+                    console.log("Auth attempt:", { username });
                     
-                    if (username === user.username && bcrypt.compareSync(password, user.password)) {
-                        return {
+                    const match = await bcrypt.compare(password, user.password);
+                    console.log("Password match:", match);
+                    
+                    if (username === user.username && match) {
+                        const userData = {
                             id: '1',
                             username: credentials.username,
                             apiKey: process.env.TMDB_API_KEY || ''
                         };
+                        console.log("Auth successful:", userData);
+                        return userData;
                     }
+                    
+                    console.log("Auth failed");
                     return null;
                 } catch (error) {
                     console.error("Auth error:", error);
@@ -46,6 +57,7 @@ export const authOptions: AuthOptions = {
             }
         })
     ],
+    debug: true,  // Active les logs détaillés
     session: {
         strategy: "jwt",
         maxAge: 2 * 60 * 60,

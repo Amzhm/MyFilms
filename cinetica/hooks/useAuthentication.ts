@@ -15,11 +15,16 @@ export function useAuthentication() {
 
     const handleLogin = async (credentials: Credentials) => {
         setIsLoading(true);
+        setError('');
+        
         try {
             const result = await signIn('credentials', {
                 ...credentials,
-                redirect: false
+                callbackUrl: '/dashboard',
+                redirect: false,
             });
+
+            console.log("SignIn result:", result);
 
             if (result?.ok) {
                 router.push('/dashboard');
@@ -27,7 +32,7 @@ export function useAuthentication() {
                 setError('Identifiants incorrects');
             }
         } catch (e) {
-            console.error(e);
+            console.error("Login error:", e);
             setError('Erreur de connexion');
         } finally {
             setIsLoading(false);
