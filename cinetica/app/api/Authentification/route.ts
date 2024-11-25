@@ -9,6 +9,6 @@ export async function POST(request: Request): Promise<Response> {
         
         return new Response(JSON.stringify({ isAuthenticated: true }), { status: 200 });
     } else {
-        return new Response(JSON.stringify({ isAuthenticated: true }), { status: 200 });
+        return new Response(JSON.stringify({ isAuthenticated: false }), { status: 401 });
     }
 }

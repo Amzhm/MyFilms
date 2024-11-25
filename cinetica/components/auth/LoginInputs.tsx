@@ -19,9 +19,9 @@ export function LoginInputs({ onSubmit, isLoading }: LoginInputsProps) {
 
     return (
         <form onSubmit={handleSubmit} className="w-4/5">
-            <div className='mb-2 h-11 rounded-sm border-gray-900 border-2 dark:border-0 relative'>
+            <div className=' mb-2 h-11 rounded-sm border-gray-900 border-2 dark:border-0 relative'>
                 <input
-                    className="w-full h-full pl-9 rounded-sm"
+                    className="w-full h-full pl-9 rounded-sm dark:text-white"
                     type="text"
                     placeholder="Nom d'utilisateur"
                     value={values.username}
@@ -31,7 +31,7 @@ export function LoginInputs({ onSubmit, isLoading }: LoginInputsProps) {
             </div>
             <div className='mb-6 h-11 rounded-sm border-gray-900 border-2 dark:border-0 relative'>
                 <input
-                    className="w-full h-full pl-9 rounded-sm"
+                    className="w-full h-full pl-9 rounded-sm dark:text-white"
                     type="password"
                     placeholder="Mot de passe"
                     value={values.password}

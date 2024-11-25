@@ -49,6 +49,13 @@ export const authOptions: AuthOptions = {
             }
         })
     ],
+    jwt: {
+        maxAge: 60,
+    },
+    session: {
+        strategy: 'jwt',
+        maxAge: 60,
+    },
     pages: {
         signIn: '/login',
         error: '/login',
