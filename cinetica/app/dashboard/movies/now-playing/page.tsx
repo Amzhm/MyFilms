@@ -1,4 +1,4 @@
-// app/dashboard/movies/popular/page.tsx
+// app/dashboard/movies/now-playing/page.tsx
 'use client';
 
 import { Film } from 'lucide-react';
@@ -29,7 +29,7 @@ export default function TopRatedMovies() {
         <div className="p-6 space-y-6">
             <div className="flex items-center space-x-3 mb-6">
                 <Film className="w-6 h-6 text-neutral-700 dark:text-white" />
-                <h1 className="text-2xl font-bold text-neutral-900 dark:text-white">Top Rated Movies</h1>
+                <h1 className="text-2xl font-bold text-neutral-900 dark:text-white">Now Playing Movies</h1>
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">

@@ -1,4 +1,3 @@
-// app/dashboard/layout.tsx
 'use client';
 
 import { PropsWithChildren } from 'react';
@@ -16,7 +15,7 @@ export default function DashboardLayout({ children }: PropsWithChildren) {
     } = useDashboardLayout();
 
     return (
-        <div className="min-h-screen w-screen bg-white dark:bg-black text-neutral-900 dark:text-white font-sans">
+        <div className="min-h-screen w-screen bg-white dark:bg-black text-neutral-900 dark:text-white overflow-hidden font-sans">
             {isMobile && !isCollapsed && (
                 <div 
                     className="fixed inset-0 bg-black bg-opacity-50 z-40 transition-opacity duration-500 ease-in-out"
@@ -27,7 +26,7 @@ export default function DashboardLayout({ children }: PropsWithChildren) {
             <div
                 className="min-h-screen w-full grid transition-all duration-500 ease-[cubic-bezier(0.4,0,0.2,1)] dark:bg-black"
                 style={{
-                    gridTemplateAreas: `'header header' 'divider divider' 'sidebar content'`,
+                    gridTemplateAreas: "'header header' 'divider divider' 'sidebar content'",
                     gridTemplateColumns: isCollapsed ? '80px 1fr' : '280px 1fr',
                     gridTemplateRows: '64px 1px 1fr',
                 }}
@@ -79,19 +78,35 @@ export default function DashboardLayout({ children }: PropsWithChildren) {
 
                 <div
                     style={{ gridArea: 'divider' }}
-                    className="bg-neutral-200 dark:bg-neutral-800"
+                    className="bg-neutral-200 dark:bg-neutral-800 fixed top-[65px] w-full z-40"
                 />
 
-                <Sidebar 
-                    isCollapsed={isCollapsed}
-                    isMobile={isMobile}
-                    onToggle={toggleSidebar}
-                />
+                <div 
+                    className={`
+                        transition-all duration-500 ease-[cubic-bezier(0.4,0,0.2,1)]
+                        fixed lg:fixed
+                        lg:block
+                        z-50 lg:z-auto
+                        h-full
+                        bg-white dark:bg-black
+                        shadow-lg lg:shadow-none
+                        top-[65px]
+                        ${isMobile && isCollapsed ? '-translate-x-full' : 'translate-x-0'}
+                        pointer-events-auto
+                    `}
+                    style={{ 
+                        width: isCollapsed ? '80px' : '280px',
+                    }}
+                >
+                    <Sidebar 
+                        isCollapsed={isCollapsed}
+                        onToggle={() => !isMobile && toggleSidebar()}
+                        isMobile={isMobile}
+                    />
+                </div>
 
                 <Content>
-                    <main className="w-full">
                         {children}
-                    </main>
                 </Content>
             </div>
         </div>
