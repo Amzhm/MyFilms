@@ -7,4 +7,5 @@ export interface search {
    first_air_date: string;
    poster_path: string;
    release_date: string;
+   name: string;
 }

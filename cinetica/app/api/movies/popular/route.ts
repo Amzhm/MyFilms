@@ -14,7 +14,7 @@ export async function GET(request: Request) {
 
     try {
         const response = await fetch(
-            `https://api.themoviedb.org/3/movie/popular?api_key=${session.user.apiKey}&language=fr-FR&page=${page}`
+            `https://api.themoviedb.org/3/movie/popular?api_key=${session.user.apiKey}&language=en-US&page=${page}`
         );
         
         if (!response.ok) {

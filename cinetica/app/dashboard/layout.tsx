@@ -1,6 +1,6 @@
 'use client';
 
-import { PropsWithChildren } from 'react';
+import { PropsWithChildren, Suspense } from 'react';
 import { Header } from '@/app/dashboard/components/Header';
 import { Sidebar } from '@/app/dashboard/components/Sidebar';
 import { Content } from '@/app/dashboard/components/Content';
@@ -52,7 +52,9 @@ export default function DashboardLayout({ children }: PropsWithChildren) {
                         </div>
                         
                         <div className="flex items-center space-x-4 dark:bg-black">
-                            <SearchInput />  {/* Nouveau composant */}
+                        <Suspense fallback={<div>Loading...</div>}>
+                            <SearchInput />
+                        </Suspense>
                             <button className="text-neutral-600 dark:text-white hover:text-neutral-900 dark:hover:text-neutral-100 relative">
                                 <Bell size={22} />
                                 <span className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-4 h-4 flex items-center justify-center text-xs">

@@ -12,13 +12,13 @@ export function ShowCard({ show }: ShowCardProps) {
             <div className="relative pb-[150%]">
                 <img
                     src={`https://image.tmdb.org/t/p/w500${show.poster_path}`}
-                    alt={show.title}
+                    alt={show.name}
                     className="absolute inset-0 w-full h-full object-cover"
                 />
             </div>
             <div className="p-4">
                 <h2 className="font-bold text-lg mb-2 text-neutral-900 dark:text-white line-clamp-1">
-                    {show.title}
+                    {show.name}
                 </h2>
                 <p className="text-neutral-600 dark:text-neutral-300 text-sm mb-3 line-clamp-2">
                     {show.overview}

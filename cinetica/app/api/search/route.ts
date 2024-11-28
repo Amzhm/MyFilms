@@ -19,7 +19,7 @@ export async function GET(request: Request) {
 
    try {
        const response = await fetch(
-           `https://api.themoviedb.org/3/search/multi?api_key=${session.user.apiKey}&language=fr-FR&query=${encodeURIComponent(query)}&page=1&include_adult=false`
+           `https://api.themoviedb.org/3/search/multi?api_key=${session.user.apiKey}&language=en-US&query=${encodeURIComponent(query)}&page=1&include_adult=false`
        );
 
        const data = await response.json();
