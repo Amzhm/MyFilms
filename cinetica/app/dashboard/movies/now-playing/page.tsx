@@ -5,7 +5,7 @@ import { Film } from 'lucide-react';
 import { MovieCard } from '@/app/dashboard/components/MovieCard';
 import { useMovies } from '@/hooks/useMovies';
 
-export default function TopRatedMovies() {
+export default function NowPlayingMovies() {
     const { movies, loading, error } = useMovies('now-playing');
 
     if (loading) {

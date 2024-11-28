@@ -1,15 +1,15 @@
 // components/dashboard/Sidebar.tsx
 import { PropsWithChildren } from 'react';
-import { Film, Star, Play, Tv, List, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Film, Star, Play, Tv, List } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 
 interface SidebarProps extends PropsWithChildren {
     isCollapsed: boolean;
-    onToggle: () => void;
-    isMobile?: boolean;
+    /*onToggle: () => void;
+    isMobile?: boolean;*/
 }
 
-export const Sidebar = ({ isCollapsed, onToggle, isMobile = false, children }: SidebarProps) => {
+export const Sidebar = ({ isCollapsed/*, onToggle, isMobile = false, */,children }: SidebarProps) => {
     const router = useRouter();
 
     const navigate = (path: string) => {
@@ -24,14 +24,6 @@ export const Sidebar = ({ isCollapsed, onToggle, isMobile = false, children }: S
                 width: isCollapsed ? '80px' : '280px',
             }}
         >
-            {!isMobile && (
-                <button
-                    className="flex items-center justify-center p-2 w-full bg-gray-200 dark:bg-gray-800 hover:bg-gray-300 dark:hover:bg-gray-700 transition-colors duration-300"
-                    onClick={onToggle}
-                >
-                    {isCollapsed ? <ChevronRight className="w-5 h-5" /> : <ChevronLeft className="w-5 h-5" />}
-                </button>
-            )}
 
             <div className="p-4">
                 {isCollapsed && (

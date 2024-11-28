@@ -5,7 +5,7 @@ export const Content = ({ children }: PropsWithChildren) => {
     return (
         <div 
             style={{ gridArea: 'content' }} 
-            className="w-full min-h-full bg-white dark:bg-black overflow-y-auto mt-[64px]"
+            className="w-full h-[calc(100vh-65px)] bg-white dark:bg-black overflow-y-auto mt-[65px]"
         >
             {children}
         </div>
