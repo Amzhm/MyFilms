@@ -20,9 +20,6 @@ export function MovieCard({ movie }: MovieCardProps) {
                 <h2 className="font-bold text-lg mb-2 text-neutral-900 dark:text-white line-clamp-1">
                     {movie.title}
                 </h2>
-                <p className="text-neutral-600 dark:text-neutral-300 text-sm mb-3 line-clamp-2">
-                    {movie.overview}
-                </p>
                 <div className="flex items-center justify-between">
                     <div className="flex items-center space-x-1">
                         <Star className="w-4 h-4 text-yellow-400" />

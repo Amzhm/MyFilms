@@ -1,19 +1,25 @@
 // components/dashboard/Sidebar.tsx
+'use client';
+
 import { PropsWithChildren } from 'react';
 import { Film, Star, Play, Tv, List } from 'lucide-react';
 import { useRouter } from 'next/navigation';
+import { useDashboardLayout } from '@/hooks/useDashboardLayout';
 
 interface SidebarProps extends PropsWithChildren {
     isCollapsed: boolean;
-    /*onToggle: () => void;
-    isMobile?: boolean;*/
+    setIsCollapsed: (value: boolean) => void;
 }
 
-export const Sidebar = ({ isCollapsed/*, onToggle, isMobile = false, */,children }: SidebarProps) => {
+export const Sidebar = ({ isCollapsed, setIsCollapsed, children }: SidebarProps) => {
     const router = useRouter();
+    const { isMobile } = useDashboardLayout();
 
     const navigate = (path: string) => {
         router.push(path);
+        if (isMobile) {
+            setIsCollapsed(true);
+        }
     };
 
     return (
@@ -24,7 +30,6 @@ export const Sidebar = ({ isCollapsed/*, onToggle, isMobile = false, */,children
                 width: isCollapsed ? '80px' : '280px',
             }}
         >
-
             <div className="p-4">
                 {isCollapsed && (
                     <div className="flex flex-col items-center space-y-4">

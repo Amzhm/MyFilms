@@ -1,3 +1,7 @@
+// hooks/useDashboardLayout.txs
+
+'use client';
+
 import { useState, useEffect, useRef } from 'react';
 import { signOut } from 'next-auth/react';
 
@@ -22,6 +26,13 @@ export function useDashboardLayout(): DashboardLayoutHooks {
 
     useEffect(() => {
         setIsClient(true);
+        
+        // Initial mobile check
+        const mobile = window.innerWidth < 1024;
+        setIsMobile(mobile);
+        if (mobile) {
+            setIsCollapsed(true);
+        }
     }, []);
 
     useEffect(() => {
@@ -35,9 +46,18 @@ export function useDashboardLayout(): DashboardLayoutHooks {
             }
         };
 
-        handleResize();
-        window.addEventListener('resize', handleResize);
-        return () => window.removeEventListener('resize', handleResize);
+        // Debounce resize handler
+        let resizeTimer: NodeJS.Timeout;
+        const debouncedHandleResize = () => {
+            clearTimeout(resizeTimer);
+            resizeTimer = setTimeout(handleResize, 100);
+        };
+
+        window.addEventListener('resize', debouncedHandleResize);
+        return () => {
+            window.removeEventListener('resize', debouncedHandleResize);
+            clearTimeout(resizeTimer);
+        };
     }, [isClient]);
 
     useEffect(() => {
@@ -56,7 +76,11 @@ export function useDashboardLayout(): DashboardLayoutHooks {
     };
 
     const handleLogout = async () => {
-        await signOut({ callbackUrl: '/login' });
+        try {
+            await signOut({ callbackUrl: '/login' });
+        } catch (error) {
+            console.error('Logout error:', error);
+        }
     };
 
     return {

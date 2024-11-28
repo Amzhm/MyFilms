@@ -8,7 +8,7 @@ interface ShowCardProps {
 
 export function ShowCard({ show }: ShowCardProps) {
     return (
-        <div className="bg-white dark:bg-neutral-800 rounded-xl shadow-md overflow-hidden border border-neutral-200 dark:border-neutral-700 transition-transform duration-300 hover:scale-105">
+        <div className="bg-white dark:bg-neutral-950 rounded-xl shadow-md overflow-hidden border border-neutral-200 dark:border-neutral-700 transition-transform duration-300 hover:scale-105">
             <div className="relative pb-[150%]">
                 <img
                     src={`https://image.tmdb.org/t/p/w500${show.poster_path}`}
@@ -20,9 +20,6 @@ export function ShowCard({ show }: ShowCardProps) {
                 <h2 className="font-bold text-lg mb-2 text-neutral-900 dark:text-white line-clamp-1">
                     {show.name}
                 </h2>
-                <p className="text-neutral-600 dark:text-neutral-300 text-sm mb-3 line-clamp-2">
-                    {show.overview}
-                </p>
                 <div className="flex items-center justify-between">
                     <div className="flex items-center space-x-1">
                         <Star className="w-4 h-4 text-yellow-400" />

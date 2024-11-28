@@ -1,34 +1,20 @@
+'use client';
 // app/dashboard/page.tsx
-import { Film, Tv, Star } from 'lucide-react';
+
+import React from 'react';
+import MovieSlider from './components/MovieSlider';
+import ShowSlider from './components/ShowSlider';
 
 export default function DashboardPage() {
   return (
-    <div className="p-6 max-w-7xl mx-auto space-y-8 dark:bg-black">
-      <div className="grid grid-cols-1 gap-8 dark:bg-black">
-        <div className="bg-white dark:bg-black rounded-xl shadow-md p-6 border border-neutral-100 dark:border-neutral-800">
-          <div className="flex items-center mb-4 space-x-3">
-            <Film className="text-neutral-700 dark:text-white" />
-            <h2 className="text-xl font-bold text-neutral-800 dark:text-white">Box Office Movies</h2>
-          </div>
-          <p className="text-neutral-600 dark:text-neutral-300">Top trending and highest-grossing movies</p>
-        </div>
-
-        <div className="bg-white dark:bg-black rounded-xl shadow-md p-6 border border-neutral-100 dark:border-neutral-800">
-          <div className="flex items-center mb-4 space-x-3">
-            <Tv className="text-neutral-700 dark:text-white" />
-            <h2 className="text-xl font-bold text-neutral-800 dark:text-white">Popular TV Series</h2>
-          </div>
-          <p className="text-neutral-600 dark:text-neutral-300">Currently trending TV shows and series</p>
-        </div>
-
-        <div className="bg-white dark:bg-black rounded-xl shadow-md p-6 border border-neutral-100 dark:border-neutral-800">
-          <div className="flex items-center mb-4 space-x-3">
-            <Star className="text-neutral-700 dark:text-white" />
-            <h2 className="text-xl font-bold text-neutral-800 dark:text-white">Recommended for You</h2>
-          </div>
-          <p className="text-neutral-600 dark:text-neutral-300">Personalized movie and series recommendations</p>
-        </div>
-      </div>
+    <div className="space-y-8 py-6">
+      <MovieSlider category="popular" title="Popular Movies" />
+      <MovieSlider category="top-rated" title="Top Rated Movies" />
+      <MovieSlider category="now-playing" title="Now Playing Movies" />
+      
+      <ShowSlider category="popular" title="Popular TV Shows" />
+      <ShowSlider category="top-rated" title="Top Rated TV Shows" />
+      <ShowSlider category="on-the-air" title="On The Air TV Shows" />
     </div>
   );
 }

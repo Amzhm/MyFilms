@@ -1,3 +1,5 @@
+// app/dashboard/layout.tsx
+
 'use client';
 
 import { PropsWithChildren, Suspense } from 'react';
@@ -10,7 +12,8 @@ import { SearchInput } from './components/SearchInput';
 
 export default function DashboardLayout({ children }: PropsWithChildren) {
     const { 
-        isCollapsed, 
+        isCollapsed,
+        setIsCollapsed, // Ajout de setIsCollapsed ici
         isMobile, 
         toggleSidebar,
         showLogout,
@@ -112,7 +115,9 @@ export default function DashboardLayout({ children }: PropsWithChildren) {
                 >
                     <Sidebar 
                         isCollapsed={isCollapsed}
-                    />
+                        setIsCollapsed={setIsCollapsed}
+                    >
+                    </Sidebar>
                 </div>
 
                 <Content>

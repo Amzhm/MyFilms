@@ -1,4 +1,6 @@
+'use client';
 // hooks/useMovies.ts
+
 import { useState, useEffect } from 'react';
 import { Movie } from '@/app/Entities/Movie/movie';
 import { fetchTopRatedMovies } from '@/app/Entities/Movie/top-rated';
@@ -13,7 +15,7 @@ const fetchFunctions = {
     'now-playing': fetchNowPlayingMovies
 };
 
-export function useMovies(category: MovieCategory) {
+export function useMovies(category: MovieCategory, limit: number = 30) {
     const [movies, setMovies] = useState<Movie[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
@@ -23,7 +25,7 @@ export function useMovies(category: MovieCategory) {
             try {
                 const fetchFunction = fetchFunctions[category];
                 const data = await fetchFunction();
-                setMovies(data);
+                setMovies(data.slice(0, limit));
             } catch (err) {
                 setError('Failed to load movies. Please try again later.');
                 console.error(err);
@@ -33,7 +35,7 @@ export function useMovies(category: MovieCategory) {
         };
 
         loadMovies();
-    }, [category]);
+    }, [category, limit]);
 
     return { movies, loading, error };
 }
