@@ -8,7 +8,7 @@ interface MovieCardProps {
 
 export function MovieCard({ movie }: MovieCardProps) {
     return (
-        <div className="bg-white dark:bg-neutral-800 rounded-xl shadow-md overflow-hidden border border-neutral-200 dark:border-neutral-700 transition-transform duration-300 hover:scale-105">
+        <div className="bg-white dark:bg-neutral-800 w-[100%] lg:w-full rounded-xl shadow-md overflow-hidden border border-neutral-200 dark:border-neutral-700 transition-transform duration-300 hover:scale-105">
             <div className="relative pb-[150%]">
                 <img
                     src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
@@ -16,7 +16,7 @@ export function MovieCard({ movie }: MovieCardProps) {
                     className="absolute inset-0 w-full h-full object-cover"
                 />
             </div>
-            <div className="p-4">
+            <div className="p-4 hidden lg:block">
                 <h2 className="font-bold text-lg mb-2 text-neutral-900 dark:text-white line-clamp-1">
                     {movie.title}
                 </h2>
