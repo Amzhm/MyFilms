@@ -12,11 +12,11 @@ export default function DashboardLayout({ children }: PropsWithChildren) {
     const { 
         isCollapsed, 
         isMobile, 
-        toggleSidebar, 
-        showLogout, 
-        setShowLogout, 
-        handleLogout, 
-        popupRef 
+        toggleSidebar,
+        showLogout,
+        setShowLogout,
+        handleLogout,
+        popupRef
     } = useDashboardLayout();
 
     return (
@@ -32,7 +32,7 @@ export default function DashboardLayout({ children }: PropsWithChildren) {
                 className="min-h-screen w-full grid transition-all duration-500 ease-[cubic-bezier(0.4,0,0.2,1)] dark:bg-black"
                 style={{
                     gridTemplateAreas: "'header header' 'divider divider' 'sidebar content'",
-                    gridTemplateColumns: isCollapsed ? '80px 1fr' : '280px 1fr',
+                    gridTemplateColumns: isCollapsed ? (isMobile ? '0px 1fr' : '80px 1fr'): (isMobile ? '1fr 0px ' : '280px 1fr'),
                     gridTemplateRows: '64px 1px 1fr',
                 }}
             >
@@ -110,7 +110,9 @@ export default function DashboardLayout({ children }: PropsWithChildren) {
                         width: isCollapsed ? '80px' : '280px',
                     }}
                 >
-                    <Sidebar isCollapsed={isCollapsed} />
+                    <Sidebar 
+                        isCollapsed={isCollapsed}
+                    />
                 </div>
 
                 <Content>
