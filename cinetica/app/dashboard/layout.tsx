@@ -4,7 +4,7 @@ import { PropsWithChildren, Suspense } from 'react';
 import { Header } from '@/app/dashboard/components/Header';
 import { Sidebar } from '@/app/dashboard/components/Sidebar';
 import { Content } from '@/app/dashboard/components/Content';
-import { Menu, X,Bell, User, Clapperboard } from 'lucide-react';
+import { Menu, X, Bell, User, Clapperboard, LogOut } from 'lucide-react';
 import { useDashboardLayout } from '@/hooks/useDashboardLayout';
 import { SearchInput } from './components/SearchInput';
 
@@ -12,7 +12,11 @@ export default function DashboardLayout({ children }: PropsWithChildren) {
     const { 
         isCollapsed, 
         isMobile, 
-        toggleSidebar 
+        toggleSidebar, 
+        showLogout, 
+        setShowLogout, 
+        handleLogout, 
+        popupRef 
     } = useDashboardLayout();
 
     return (
@@ -28,23 +32,23 @@ export default function DashboardLayout({ children }: PropsWithChildren) {
                 className="min-h-screen w-full grid transition-all duration-500 ease-[cubic-bezier(0.4,0,0.2,1)] dark:bg-black"
                 style={{
                     gridTemplateAreas: "'header header' 'divider divider' 'sidebar content'",
-                    gridTemplateColumns: isCollapsed ? (isMobile ? '0px 1fr' : '80px 1fr'): (isMobile ? '1fr 0px ' : '280px 1fr'),
+                    gridTemplateColumns: isCollapsed ? '80px 1fr' : '280px 1fr',
                     gridTemplateRows: '64px 1px 1fr',
                 }}
             >
                 <Header>
                     <div className="flex justify-between items-center w-full pr-6 pl-1 dark:bg-black">
                         <div className="flex items-center space-x-3 dark:bg-black">
-                                <button
-                                    onClick={toggleSidebar}
-                                    className="p-2 mr-2 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors duration-300"
-                                >
-                                    {isCollapsed ? (
-                                        <Menu className="w-6 h-6 text-gray-700 dark:text-white" />
-                                    ) : (
-                                        <X className="w-6 h-6 text-gray-700 dark:text-white" />
-                                    )}
-                                </button>
+                            <button
+                                onClick={toggleSidebar}
+                                className="p-2 mr-2 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors duration-300"
+                            >
+                                {isCollapsed ? (
+                                    <Menu className="w-6 h-6 text-gray-700 dark:text-white" />
+                                ) : (
+                                    <X className="w-6 h-6 text-gray-700 dark:text-white" />
+                                )}
+                            </button>
                             <Clapperboard size={28} className="text-neutral-700 dark:text-white" />
                             <h1 className="text-2xl font-black tracking-tight text-neutral-900 dark:text-white">
                                 CINETICA
@@ -52,18 +56,34 @@ export default function DashboardLayout({ children }: PropsWithChildren) {
                         </div>
                         
                         <div className="flex items-center space-x-4 dark:bg-black">
-                        <Suspense fallback={<div>Loading...</div>}>
-                            <SearchInput />
-                        </Suspense>
+                            <Suspense fallback={<div>Loading...</div>}>
+                                <SearchInput />
+                            </Suspense>
                             <button className="text-neutral-600 dark:text-white hover:text-neutral-900 dark:hover:text-neutral-100 relative">
                                 <Bell size={22} />
                                 <span className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-4 h-4 flex items-center justify-center text-xs">
                                     3
                                 </span>
                             </button>
-                            <button className="bg-neutral-200 dark:bg-neutral-700 p-2 rounded-full">
-                                <User size={20} className="text-neutral-700 dark:text-white" />
-                            </button>
+                            <div className="relative" ref={popupRef}>
+                                <button 
+                                    onClick={() => setShowLogout(!showLogout)}
+                                    className="bg-neutral-200 dark:bg-neutral-700 p-2 rounded-full"
+                                >
+                                    <User size={20} className="text-neutral-700 dark:text-white" />
+                                </button>
+                                {showLogout && (
+                                    <div className="absolute right-0 mt-2 w-48 py-2 bg-white dark:bg-neutral-800 rounded-lg shadow-xl">
+                                        <button
+                                            onClick={handleLogout}
+                                            className="flex items-center w-full px-4 py-2 text-sm text-gray-700 dark:text-white hover:bg-gray-100 dark:hover:bg-neutral-700"
+                                        >
+                                            <LogOut className="w-4 h-4 mr-2" />
+                                            Déconnexion
+                                        </button>
+                                    </div>
+                                )}
+                            </div>
                         </div>
                     </div>
                 </Header>
@@ -90,15 +110,11 @@ export default function DashboardLayout({ children }: PropsWithChildren) {
                         width: isCollapsed ? '80px' : '280px',
                     }}
                 >
-                    <Sidebar 
-                        isCollapsed={isCollapsed}
-                        //onToggle={() => !isMobile && toggleSidebar()}
-                        //isMobile={isMobile}
-                    />
+                    <Sidebar isCollapsed={isCollapsed} />
                 </div>
 
                 <Content>
-                        {children}
+                    {children}
                 </Content>
             </div>
         </div>
