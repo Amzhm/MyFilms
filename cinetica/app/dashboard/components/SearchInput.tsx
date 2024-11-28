@@ -1,5 +1,4 @@
 // components/SearchInput.tsx
-import { useIsMobile } from '@/hooks/use-mobile';
 import { useSearch } from '@/hooks/useSearch';
 import { Search } from 'lucide-react';
 
