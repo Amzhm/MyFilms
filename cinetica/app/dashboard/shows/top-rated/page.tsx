@@ -36,7 +36,7 @@ export default function TopRatedShows() {
                <h1 className="text-2xl font-bold text-neutral-900 dark:text-white">Top Rated Shows</h1>
            </div>
 
-           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 gap-6">
                {shows.map((show) => (
                    <ShowCard key={show.id} show={show} />
                ))}

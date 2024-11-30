@@ -1,3 +1,5 @@
+// app/dashboard/components/ShowSlider.tsx
+
 'use client';
 
 import React from 'react';
