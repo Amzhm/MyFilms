@@ -46,11 +46,3 @@ export interface ShowDetails extends Show {
         posters: Image[];
     };
 }
-
-export async function fetchShowDetails(showId: string): Promise<ShowDetails> {
-    const response = await fetch(`/api/shows/${showId}`);
-    if (!response.ok) {
-        throw new Error('Failed to fetch show details');
-    }
-    return response.json();
-}

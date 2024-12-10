@@ -1,41 +1,36 @@
-'use client';
 // hooks/useMovies.ts
+'use client';
 
 import { useState, useEffect } from 'react';
-import { Movie } from '@/app/Entities/Movie/movie';
-import { fetchTopRatedMovies } from '@/app/Entities/Movie/top-rated';
-import { fetchPopularMovies } from '@/app/Entities/Movie/popular';
-import { fetchNowPlayingMovies } from '@/app/Entities/Movie/now-playing';
-
-type MovieCategory = 'top-rated' | 'popular' | 'now-playing';
-
-const fetchFunctions = {
-    'top-rated': fetchTopRatedMovies,
-    'popular': fetchPopularMovies,
-    'now-playing': fetchNowPlayingMovies
-};
+import { MovieCategory, MovieState } from '@/domain/movie/types';
+import { useMovieContext } from '@/contexts/MovieContext';
 
 export function useMovies(category: MovieCategory, limit: number = 30) {
-    const [movies, setMovies] = useState<Movie[]>([]);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState<string | null>(null);
+    const [state, setState] = useState<MovieState>({
+        movies: [],
+        loading: true,
+        error: null
+    });
+
+    const { movieUseCase } = useMovieContext();
 
     useEffect(() => {
         const loadMovies = async () => {
             try {
-                const fetchFunction = fetchFunctions[category];
-                const data = await fetchFunction();
-                setMovies(data.slice(0, limit));
+                const movies = await movieUseCase.getMoviesByCategory(category, limit);
+                setState({ movies, loading: false, error: null });
             } catch (err) {
-                setError('Failed to load movies. Please try again later.');
+                setState(prev => ({
+                    ...prev,
+                    loading: false,
+                    error: 'Failed to load movies. Please try again later.'
+                }));
                 console.error(err);
-            } finally {
-                setLoading(false);
             }
         };
 
         loadMovies();
-    }, [category, limit]);
+    }, [category, limit, movieUseCase]);
 
-    return { movies, loading, error };
+    return state;
 }

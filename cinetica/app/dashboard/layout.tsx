@@ -9,11 +9,31 @@ import { Content } from '@/app/dashboard/components/Content';
 import { Menu, X, Bell, User, Clapperboard, LogOut } from 'lucide-react';
 import { useDashboardLayout } from '@/hooks/useDashboardLayout';
 import { SearchInput } from './components/SearchInput';
+import { LayoutProvider } from '@/contexts/LayoutContext';
+import { MovieProvider } from '@/contexts/MovieContext';
+import { ShowProvider } from '@/contexts/ShowContext';
+import { RepositoryProvider } from '@/contexts/Repository';
+import { Movies } from '@/repository/Movies';
+import { Shows } from '@/repository/Shows';
 
 export default function DashboardLayout({ children }: PropsWithChildren) {
+    return (
+        <RepositoryProvider>
+        <LayoutProvider>
+            <MovieProvider moviesRepository={new Movies()}>
+                <ShowProvider showsRepository={new Shows()}>
+                    <DashboardLayoutContent>{children}</DashboardLayoutContent>
+                </ShowProvider>
+            </MovieProvider>
+        </LayoutProvider>
+    </RepositoryProvider>
+    );
+}
+
+function DashboardLayoutContent({ children }: PropsWithChildren) {
     const { 
         isCollapsed,
-        setIsCollapsed, // Ajout de setIsCollapsed ici
+        setIsCollapsed,
         isMobile, 
         toggleSidebar,
         showLogout,
@@ -21,7 +41,6 @@ export default function DashboardLayout({ children }: PropsWithChildren) {
         handleLogout,
         popupRef
     } = useDashboardLayout();
-
     return (
         <div className="min-h-screen w-screen bg-white dark:bg-black text-neutral-900 dark:text-white overflow-hidden font-sans">
             {isMobile && !isCollapsed && (

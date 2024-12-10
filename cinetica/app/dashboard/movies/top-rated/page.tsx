@@ -5,14 +5,15 @@ import { Film } from 'lucide-react';
 import { MovieCard } from '@/app/dashboard/components/MovieCard';
 import { useInfiniteScroll } from '@/hooks/useInfiniteScroll';
 import { Movie } from '@/app/Entities/Movie/movie';
+import { useRepository } from '@/contexts/Repository';
 
 export default function TopRatedMovies() {
-   const { items: movies, loading, error, loaderRef } = useInfiniteScroll<Movie>(async (page) => {
-       const response = await fetch(`/api/movies/top-rated?page=${page}`);
-       return response.json();
-   });
+  const { movie } = useRepository();
+  const { items: movieList, loading, error, loaderRef } = useInfiniteScroll<Movie>(
+      (page) => movie.getTopRated(page)
+  );
 
-   if (loading && !movies.length) {
+   if (loading && !movieList.length) {
        return (
            <div className="flex justify-center items-center p-12">
                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-neutral-900 dark:border-white" />
@@ -37,7 +38,7 @@ export default function TopRatedMovies() {
            </div>
 
            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-               {movies.map((movie) => (
+               {movieList.map((movie) => (
                    <MovieCard key={movie.id} movie={movie} />
                ))}
            </div>

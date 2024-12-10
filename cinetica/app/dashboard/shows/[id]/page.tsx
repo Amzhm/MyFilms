@@ -1,30 +1,13 @@
 // app/dashboard/shows/[id]/page.tsx
 'use client';
 
-import { useEffect, useState } from 'react';
-import { ShowDetails, fetchShowDetails } from '@/app/Entities/Show/show-details';
 import { Star, Calendar, Film, Music, Camera, X, Tv } from 'lucide-react';
+import { useShowDetails } from '@/hooks/useShowDetails';
+import { useImageSelection } from '@/hooks/useImageSelection'; 
 
 export default function ShowPage({ params }: { params: { id: string } }) {
-    const [show, setShow] = useState<ShowDetails | null>(null);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState<string | null>(null);
-    const [selectedImage, setSelectedImage] = useState<string | null>(null);
-
-    useEffect(() => {
-        const loadShow = async () => {
-            try {
-                const data = await fetchShowDetails(params.id);
-                setShow(data);
-            } catch {
-                setError('Failed to load show details');
-            } finally {
-                setLoading(false);
-            }
-        };
-
-        loadShow();
-    }, [params.id]);
+    const { showDetails, loading, error } = useShowDetails(params.id);
+    const { selectedImage, selectImage, clearSelection } = useImageSelection();
 
     if (loading) {
         return (
@@ -34,7 +17,7 @@ export default function ShowPage({ params }: { params: { id: string } }) {
         );
     }
 
-    if (error || !show) {
+    if (error || !showDetails) {
         return (
             <div className="flex justify-center items-center min-h-screen text-red-500">
                 {error || 'Show not found'}
@@ -42,10 +25,10 @@ export default function ShowPage({ params }: { params: { id: string } }) {
         );
     }
 
-    const creator = show.credits.crew.find(person => person.job === 'Creator' || person.job === 'Executive Producer');
-    const composer = show.credits.crew.find(person => person.job === 'Original Music Composer');
-    const cinematographer = show.credits.crew.find(person => person.job === 'Director of Photography');
-    const trailer = show.videos?.find(video => video.type === 'Trailer');
+    const creator = showDetails.credits.crew.find(person => person.job === 'Creator' || person.job === 'Executive Producer');
+    const composer = showDetails.credits.crew.find(person => person.job === 'Original Music Composer');
+    const cinematographer = showDetails.credits.crew.find(person => person.job === 'Director of Photography');
+    const trailer = showDetails.videos?.find(video => video.type === 'Trailer');
 
     return (
         <div className="container mx-auto py-8 px-4">
@@ -53,7 +36,7 @@ export default function ShowPage({ params }: { params: { id: string } }) {
                 <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-90">
                     <button 
                         className="absolute top-4 right-4 text-white"
-                        onClick={() => setSelectedImage(null)}
+                        onClick={clearSelection}
                     >
                         <X className="w-6 h-6" />
                     </button>
@@ -70,8 +53,8 @@ export default function ShowPage({ params }: { params: { id: string } }) {
                     <div className="sticky top-24">
                         <div className="rounded-lg overflow-hidden shadow-lg">
                             <img
-                                src={`https://image.tmdb.org/t/p/w500${show.poster_path}`}
-                                alt={show.name}
+                                src={`https://image.tmdb.org/t/p/w500${showDetails.poster_path}`}
+                                alt={showDetails.name}
                                 className="w-full h-auto"
                             />
                         </div>
@@ -111,7 +94,7 @@ export default function ShowPage({ params }: { params: { id: string } }) {
                                 <div className="pt-4 border-t dark:border-neutral-700">
                                     <p className="text-sm text-neutral-500 mb-2">Genres</p>
                                     <div className="flex flex-wrap gap-2">
-                                        {show.genres.map(genre => (
+                                        {showDetails.genres.map(genre => (
                                             <span
                                                 key={genre.id}
                                                 className="px-3 py-1 bg-neutral-100 dark:bg-neutral-700 rounded-full text-sm"
@@ -127,20 +110,20 @@ export default function ShowPage({ params }: { params: { id: string } }) {
                 </div>
 
                 <div className="md:col-span-8">
-                    <h1 className="text-4xl font-bold mb-4 dark:text-white">{show.name}</h1>
+                    <h1 className="text-4xl font-bold mb-4 dark:text-white">{showDetails.name}</h1>
                     
                     <div className="flex items-center mb-6 gap-4">
                         <div className="flex items-center">
                             <Star className="w-5 h-5 text-yellow-400 mr-1" />
-                            <span className="dark:text-white">{show.vote_average.toFixed(1)}</span>
+                            <span className="dark:text-white">{showDetails.vote_average.toFixed(1)}</span>
                         </div>
                         <div className="flex items-center">
                             <Tv className="w-5 h-5 mr-1" />
-                            <span className="dark:text-white">{show.number_of_seasons} Seasons</span>
+                            <span className="dark:text-white">{showDetails.number_of_seasons} Seasons</span>
                         </div>
                         <div className="flex items-center">
                             <Calendar className="w-5 h-5 mr-1" />
-                            <span className="dark:text-white">{new Date(show.first_air_date).getFullYear()}</span>
+                            <span className="dark:text-white">{new Date(showDetails.first_air_date).getFullYear()}</span>
                         </div>
                     </div>
 
@@ -150,7 +133,7 @@ export default function ShowPage({ params }: { params: { id: string } }) {
                             <div className="aspect-video">
                                 <iframe
                                     className="w-full h-full rounded-lg"
-                                    src={`https://www.youtube.com/embed/${trailer.key}`}
+                                    src={`https://www.youtube.com/embed/${trailer.key}?autoplay=1&mute=1`}
                                     title="Trailer"
                                     allowFullScreen
                                 />
@@ -160,13 +143,13 @@ export default function ShowPage({ params }: { params: { id: string } }) {
 
                     <div className="mb-8">
                         <h2 className="text-2xl font-semibold mb-4 dark:text-white">Synopsis</h2>
-                        <p className="text-gray-700 dark:text-gray-300 leading-relaxed">{show.overview}</p>
+                        <p className="text-gray-700 dark:text-gray-300 leading-relaxed">{showDetails.overview}</p>
                     </div>
 
                     <div className="mb-8">
                         <h2 className="text-2xl font-semibold mb-4 dark:text-white">Cast Principal</h2>
                         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
-                            {show.credits.cast.slice(0, 8).map((actor) => (
+                            {showDetails.credits.cast.slice(0, 8).map((actor) => (
                                 <div key={actor.id} className="text-center">
                                     <div className="aspect-[2/3] mb-2">
                                         {actor.profile_path ? (
@@ -191,11 +174,11 @@ export default function ShowPage({ params }: { params: { id: string } }) {
                     <div className="mb-8">
                         <h2 className="text-2xl font-semibold mb-4 dark:text-white">Images Principales</h2>
                         <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-                            {show.images.backdrops.map((image, index) => (
+                            {showDetails.images.backdrops.map((image, index) => (
                                 <div 
                                     key={index} 
                                     className="cursor-pointer aspect-video rounded-lg overflow-hidden"
-                                    onClick={() => setSelectedImage(image.file_path)}
+                                    onClick={() => selectImage(image.file_path)}
                                 >
                                     <img
                                         src={`https://image.tmdb.org/t/p/w500${image.file_path}`}

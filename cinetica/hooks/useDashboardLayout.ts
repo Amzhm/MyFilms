@@ -1,36 +1,24 @@
-// hooks/useDashboardLayout.txs
-
-'use client';
-
+// hooks/useDashboardLayout.ts
 import { useState, useEffect, useRef } from 'react';
-import { signOut } from 'next-auth/react';
+import { useAuthContext } from '@/contexts/AuthContext';
+import { useLayoutContext } from '@/contexts/LayoutContext';
+import { LayoutState } from '@/domain/layout/types';
 
-interface DashboardLayoutHooks {
-    isCollapsed: boolean;
-    setIsCollapsed: (value: boolean) => void;
-    isMobile: boolean;
-    isClient: boolean;
-    toggleSidebar: () => void;
-    showLogout: boolean;
-    setShowLogout: (value: boolean) => void;
-    handleLogout: () => Promise<void>;
-    popupRef: React.RefObject<HTMLDivElement>;
-}
-
-export function useDashboardLayout(): DashboardLayoutHooks {
+export function useDashboardLayout() {
     const [isCollapsed, setIsCollapsed] = useState<boolean>(true);
     const [isMobile, setIsMobile] = useState<boolean>(false);
     const [isClient, setIsClient] = useState<boolean>(false);
     const [showLogout, setShowLogout] = useState(false);
     const popupRef = useRef<HTMLDivElement>(null);
 
+    const { authUseCase } = useAuthContext();
+    const { layoutUseCase } = useLayoutContext();
+
     useEffect(() => {
         setIsClient(true);
-        
-        // Initial mobile check
-        const mobile = window.innerWidth < 1024;
+        const mobile = layoutUseCase.isMobileView(window.innerWidth);
         setIsMobile(mobile);
-        if (mobile) {
+        if (layoutUseCase.shouldCollapseOnMobile(mobile)) {
             setIsCollapsed(true);
         }
     }, []);
@@ -39,14 +27,13 @@ export function useDashboardLayout(): DashboardLayoutHooks {
         if (!isClient) return;
 
         const handleResize = () => {
-            const mobile = window.innerWidth < 1024;
+            const mobile = layoutUseCase.isMobileView(window.innerWidth);
             setIsMobile(mobile);
-            if (mobile) {
+            if (layoutUseCase.shouldCollapseOnMobile(mobile)) {
                 setIsCollapsed(true);
             }
         };
 
-        // Debounce resize handler
         let resizeTimer: NodeJS.Timeout;
         const debouncedHandleResize = () => {
             clearTimeout(resizeTimer);
@@ -77,9 +64,9 @@ export function useDashboardLayout(): DashboardLayoutHooks {
 
     const handleLogout = async () => {
         try {
-            await signOut({ callbackUrl: '/login' });
+            await authUseCase.logout();
         } catch (error) {
-            console.error('Logout error:', error);
+            console.error('Logout failed:', error);
         }
     };
 

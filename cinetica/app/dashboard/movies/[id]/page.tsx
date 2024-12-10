@@ -1,30 +1,13 @@
 // app/dashboard/movies/[id]/page.tsx
 'use client';
 
-import { useEffect, useState } from 'react';
-import { MovieDetails, fetchMovieDetails } from '@/app/Entities/Movie/movie-details';
 import { Star, Clock, Calendar, Film, Music, Camera, X } from 'lucide-react';
+import { useMovieDetails } from '@/hooks/useMovieDetails';
+import { useImageSelection } from '@/hooks/useImageSelection';
 
 export default function MoviePage({ params }: { params: { id: string } }) {
-    const [movie, setMovie] = useState<MovieDetails | null>(null);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState<string | null>(null);
-    const [selectedImage, setSelectedImage] = useState<string | null>(null);
-
-    useEffect(() => {
-        const loadMovie = async () => {
-            try {
-                const data = await fetchMovieDetails(params.id);
-                setMovie(data);
-            } catch {
-                setError('Failed to load movie details');
-            } finally {
-                setLoading(false);
-            }
-        };
-
-        loadMovie();
-    }, [params.id]);
+    const { movieDetails, loading, error } = useMovieDetails(params.id);
+    const { selectedImage, selectImage, clearSelection } = useImageSelection();
 
     if (loading) {
         return (
@@ -34,7 +17,7 @@ export default function MoviePage({ params }: { params: { id: string } }) {
         );
     }
 
-    if (error || !movie) {
+    if (error || !movieDetails) {
         return (
             <div className="flex justify-center items-center min-h-screen text-red-500">
                 {error || 'Movie not found'}
@@ -42,10 +25,10 @@ export default function MoviePage({ params }: { params: { id: string } }) {
         );
     }
 
-    const director = movie.credits.crew.find(person => person.job === 'Director');
-    const composer = movie.credits.crew.find(person => person.job === 'Original Music Composer');
-    const cinematographer = movie.credits.crew.find(person => person.job === 'Director of Photography');
-    const trailer = movie.videos?.find(video => video.type === 'Trailer');
+    const director = movieDetails.credits.crew.find(person => person.job === 'Director');
+    const composer = movieDetails.credits.crew.find(person => person.job === 'Original Music Composer');
+    const cinematographer = movieDetails.credits.crew.find(person => person.job === 'Director of Photography');
+    const trailer = movieDetails.videos?.find(video => video.type === 'Trailer');
 
     return (
         <div className="container mx-auto py-8 px-4">
@@ -53,7 +36,7 @@ export default function MoviePage({ params }: { params: { id: string } }) {
                 <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-90">
                     <button 
                         className="absolute top-4 right-4 text-white"
-                        onClick={() => setSelectedImage(null)}
+                        onClick={clearSelection}
                     >
                         <X className="w-6 h-6" />
                     </button>
@@ -70,8 +53,8 @@ export default function MoviePage({ params }: { params: { id: string } }) {
                     <div className="sticky top-24">
                         <div className="rounded-lg overflow-hidden shadow-lg">
                             <img
-                                src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
-                                alt={movie.title}
+                                src={`https://image.tmdb.org/t/p/w500${movieDetails.poster_path}`}
+                                alt={movieDetails.title}
                                 className="w-full h-auto"
                             />
                         </div>
@@ -111,7 +94,7 @@ export default function MoviePage({ params }: { params: { id: string } }) {
                                 <div className="pt-4 border-t dark:border-neutral-700">
                                     <p className="text-sm text-neutral-500 mb-2">Genres</p>
                                     <div className="flex flex-wrap gap-2">
-                                        {movie.genres.map(genre => (
+                                        {movieDetails.genres.map(genre => (
                                             <span
                                                 key={genre.id}
                                                 className="px-3 py-1 bg-neutral-100 dark:bg-neutral-700 rounded-full text-sm"
@@ -127,20 +110,20 @@ export default function MoviePage({ params }: { params: { id: string } }) {
                 </div>
 
                 <div className="md:col-span-8">
-                    <h1 className="text-4xl font-bold mb-4 dark:text-white">{movie.title}</h1>
+                    <h1 className="text-4xl font-bold mb-4 dark:text-white">{movieDetails.title}</h1>
                     
                     <div className="flex items-center mb-6 gap-4">
                         <div className="flex items-center">
                             <Star className="w-5 h-5 text-yellow-400 mr-1" />
-                            <span className="dark:text-white">{movie.vote_average.toFixed(1)}</span>
+                            <span className="dark:text-white">{movieDetails.vote_average.toFixed(1)}</span>
                         </div>
                         <div className="flex items-center">
                             <Clock className="w-5 h-5 mr-1" />
-                            <span className="dark:text-white">{movie.runtime} min</span>
+                            <span className="dark:text-white">{movieDetails.runtime} min</span>
                         </div>
                         <div className="flex items-center">
                             <Calendar className="w-5 h-5 mr-1" />
-                            <span className="dark:text-white">{new Date(movie.release_date).getFullYear()}</span>
+                            <span className="dark:text-white">{new Date(movieDetails.release_date).getFullYear()}</span>
                         </div>
                     </div>
 
@@ -150,7 +133,7 @@ export default function MoviePage({ params }: { params: { id: string } }) {
                             <div className="aspect-video">
                                 <iframe
                                     className="w-full h-full rounded-lg"
-                                    src={`https://www.youtube.com/embed/${trailer.key}`}
+                                    src={`https://www.youtube.com/embed/${trailer.key}?autoplay=1&mute=1`}
                                     title="Trailer"
                                     allowFullScreen
                                 />
@@ -160,13 +143,13 @@ export default function MoviePage({ params }: { params: { id: string } }) {
 
                     <div className="mb-8">
                         <h2 className="text-2xl font-semibold mb-4 dark:text-white">Synopsis</h2>
-                        <p className="text-gray-700 dark:text-gray-300 leading-relaxed">{movie.overview}</p>
+                        <p className="text-gray-700 dark:text-gray-300 leading-relaxed">{movieDetails.overview}</p>
                     </div>
 
                     <div className="mb-8">
                         <h2 className="text-2xl font-semibold mb-4 dark:text-white">Cast Principal</h2>
                         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
-                            {movie.credits.cast.slice(0, 8).map((actor) => (
+                            {movieDetails.credits.cast.slice(0, 8).map((actor) => (
                                 <div key={actor.id} className="text-center">
                                     <div className="aspect-[2/3] mb-2">
                                         {actor.profile_path ? (
@@ -191,11 +174,11 @@ export default function MoviePage({ params }: { params: { id: string } }) {
                     <div className="mb-8">
                         <h2 className="text-2xl font-semibold mb-4 dark:text-white">Images Principales</h2>
                         <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-                            {movie.images.backdrops.map((image, index) => (
+                            {movieDetails.images.backdrops.map((image, index) => (
                                 <div 
                                     key={index} 
                                     className="cursor-pointer aspect-video rounded-lg overflow-hidden"
-                                    onClick={() => setSelectedImage(image.file_path)}
+                                    onClick={() => selectImage(image.file_path)}
                                 >
                                     <img
                                         src={`https://image.tmdb.org/t/p/w500${image.file_path}`}

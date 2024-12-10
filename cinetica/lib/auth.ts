@@ -1,6 +1,7 @@
 // /lib/auth.ts
 import { DefaultSession, AuthOptions } from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials';
+import GoogleProvider from 'next-auth/providers/google';
 
 declare module "next-auth" {
     interface User {
@@ -47,7 +48,11 @@ export const authOptions: AuthOptions = {
                     return null;
                 }
             }
-        })
+        }),
+        GoogleProvider({
+            clientId: process.env.GOOGLE_CLIENT_ID!,
+            clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
+        }),
     ],
     jwt: {
         maxAge: 30*60,
@@ -62,10 +67,14 @@ export const authOptions: AuthOptions = {
         signOut: '/login'
     },
     callbacks: {
-        async jwt({ token, user }) {
+        async jwt({ token, user,account }) {
             if (user) {
                 token.username = user.username;
                 token.apiKey = user.apiKey;
+            }
+            if (account?.provider === 'google') {
+                token.apiKey = process.env.TMDB_API_KEY;
+                token.username = token.email?.split('@')[0];
             }
             return token;
         },

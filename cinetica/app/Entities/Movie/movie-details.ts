@@ -51,11 +51,3 @@ export interface MovieDetails extends Movie {
         logos: Image[];
     };
 }
-
-export async function fetchMovieDetails(movieId: string): Promise<MovieDetails> {
-    const response = await fetch(`/api/movies/${movieId}`);
-    if (!response.ok) {
-        throw new Error('Failed to fetch movie details');
-    }
-    return response.json();
-}

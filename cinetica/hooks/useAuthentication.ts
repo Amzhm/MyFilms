@@ -1,43 +1,41 @@
 // hooks/useAuthentication.ts
-import { signIn } from 'next-auth/react';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-
-interface Credentials {
-    username: string;
-    password: string;
-}
+import { Credentials } from '@/domain/auth/types';
+import { useAuthContext } from '@/contexts/AuthContext';
+import { signIn } from 'next-auth/react';
 
 export function useAuthentication() {
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState('');
     const router = useRouter();
+    const { authUseCase } = useAuthContext();
 
-    const handleLogin = async (credentials: Credentials) => {
-        setIsLoading(true);
-        setError('');
-        
+    const handleGoogleLogin = async () => {
         try {
-            const result = await signIn('credentials', {
-                ...credentials,
-                callbackUrl: '/dashboard',
-                redirect: false,
-            });
-
-            console.log("SignIn result:", result);
-
-            if (result?.ok) {
-                router.push('/dashboard');
-            } else {
-                setError('Identifiants incorrects');
-            }
-        } catch (e) {
-            console.error("Login error:", e);
-            setError('Erreur de connexion');
+            setIsLoading(true);
+            await signIn('google', { callbackUrl: '/dashboard' });
+        } catch (error) {
+            setError('Erreur de connexion avec Google');
         } finally {
             setIsLoading(false);
         }
     };
 
-    return { handleLogin, isLoading, error };
+    const handleLogin = async (credentials: Credentials) => {
+        setIsLoading(true);
+        setError('');
+        
+        const result = await authUseCase.login(credentials);
+        
+        if (result.success) {
+            router.push('/dashboard');
+        } else {
+            setError(result.error || 'Erreur de connexion');
+        }
+        
+        setIsLoading(false);
+    };
+
+    return { handleLogin, handleGoogleLogin, isLoading, error };
 }

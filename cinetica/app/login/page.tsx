@@ -4,6 +4,14 @@ import { LoginForm } from '@/components/auth/LoginForm';
 import { useAuthentication } from '@/hooks/useAuthentication';
 
 export default function LoginPage() {
-    const { handleLogin, isLoading, error } = useAuthentication();
-    return <LoginForm onSubmit={handleLogin} isLoading={isLoading} error={error} />;
+    const { handleLogin, handleGoogleLogin, isLoading, error } = useAuthentication();
+    
+    return (
+        <LoginForm 
+            onSubmit={handleLogin} 
+            onGoogleLogin={handleGoogleLogin}
+            isLoading={isLoading} 
+            error={error} 
+        />
+    );
 }

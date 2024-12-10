@@ -5,14 +5,15 @@ import { Film } from 'lucide-react';
 import { ShowCard } from '@/app/dashboard/components/ShowCard';
 import { useInfiniteScroll } from '@/hooks/useInfiniteScroll';
 import { Show } from '@/app/Entities/Show/shows';
+import { useRepository } from '@/contexts/Repository';
 
 export default function TopRatedShows() {
-   const { items: shows, loading, error, loaderRef } = useInfiniteScroll<Show>(async (page) => {
-       const response = await fetch(`/api/shows/top-rated?page=${page}`);
-       return response.json();
-   });
+   const { shows } = useRepository();
+   const { items: showList, loading, error, loaderRef } = useInfiniteScroll<Show>(
+       (page) => shows.getTopRated(page)
+   );
 
-   if (loading && !shows.length) {
+   if (loading && !showList.length) {
        return (
            <div className="flex justify-center items-center p-12">
                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-neutral-900 dark:border-white" />
@@ -37,7 +38,7 @@ export default function TopRatedShows() {
            </div>
 
            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-               {shows.map((show) => (
+               {showList.map((show) => (
                    <ShowCard key={show.id} show={show} />
                ))}
            </div>

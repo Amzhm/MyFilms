@@ -5,6 +5,7 @@ import localFont from 'next/font/local';
 import './globals.css';
 import { ThemeProvider } from 'next-themes';
 import { SessionProvider } from 'next-auth/react';
+import { AuthProvider } from '@/contexts/AuthContext';
 
 // Police Geist Sans
 const geistSans = localFont({
@@ -31,7 +32,9 @@ export default function RootLayout({ children }: LayoutProps) {
             <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
                 <SessionProvider>
                     <ThemeProvider attribute="class">
-                        {children}
+                    <AuthProvider>
+                            {children}
+                        </AuthProvider>
                     </ThemeProvider>
                 </SessionProvider>
             </body>
