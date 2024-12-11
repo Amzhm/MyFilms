@@ -1,4 +1,3 @@
-// components/auth/LoginForm.tsx
 import { LogoSection } from './LogoSection';
 import { LoginInputs } from './LoginInputs';
 import { Button } from '@/components/ui/button';
@@ -18,28 +17,24 @@ export function LoginForm({ onSubmit, onGoogleLogin, isLoading, error }: LoginFo
                 <LogoSection />
                 <LoginInputs onSubmit={onSubmit} isLoading={isLoading} />
                 {error && <div className="text-red-500 mb-4">{error}</div>}
-            </div>
-            <div className="mt-6">
-                <div className="relative">
-                    <div className="absolute inset-0 flex items-center">
-                        <div className="w-full border-t border-gray-300 dark:border-gray-700" />
-                    </div>
-                    <div className="relative flex justify-center text-sm">
-                        <span className="px-2 bg-white dark:bg-neutral-800 text-gray-500">
-                            Ou continuer avec
-                        </span>
-                    </div>
+                
+                <div className="w-4/5 flex items-center gap-3 mb-6">
+                    <div className="h-px flex-grow bg-gray-300 dark:bg-gray-700"></div>
+                    <span className="text-sm text-gray-500 dark:text-gray-700">ou</span>
+                    <div className="h-px flex-grow bg-gray-300 dark:bg-gray-700"></div>
                 </div>
 
-                <Button
-                    onClick={onGoogleLogin}
-                    className="mt-4 w-full flex items-center justify-center gap-2 bg-white hover:bg-gray-50 text-black dark:bg-neutral-800 dark:hover:bg-neutral-700 dark:text-white"
-                    variant="outline"
-                    type="button"
-                >
-                    <FcGoogle className="w-5 h-5" />
-                    Google
-                </Button>
+                <div className="w-4/5 mb-8">
+                    <Button
+                        onClick={onGoogleLogin}
+                        className="w-full flex items-center justify-center gap-2 bg-white hover:bg-gray-50 text-black dark:bg-neutral-800 dark:hover:bg-neutral-700 dark:text-white"
+                        variant="outline"
+                        type="button"
+                    >
+                        <FcGoogle className="w-5 h-5" />
+                        Google
+                    </Button>
+                </div>
             </div>
         </div>
     );

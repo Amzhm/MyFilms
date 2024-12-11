@@ -1,13 +1,16 @@
 // app/dashboard/shows/[id]/page.tsx
 'use client';
 
-import { Star, Calendar, Film, Music, Camera, X, Tv } from 'lucide-react';
+import { useState, useRef } from 'react';
+import { Star, Calendar, Film, Music, Camera, X, Tv, ChevronLeft, ChevronRight } from 'lucide-react';
 import { useShowDetails } from '@/hooks/useShowDetails';
-import { useImageSelection } from '@/hooks/useImageSelection'; 
+import { useSlider } from '@/hooks/useSlider';
 
 export default function ShowPage({ params }: { params: { id: string } }) {
     const { showDetails, loading, error } = useShowDetails(params.id);
-    const { selectedImage, selectImage, clearSelection } = useImageSelection();
+    const [selectedImage, setSelectedImage] = useState<string | null>(null);
+    const scrollContainerRef = useRef<HTMLDivElement>(null);
+    const { showLeftButton, showRightButton, scroll } = useSlider({ scrollContainerRef });
 
     if (loading) {
         return (
@@ -36,7 +39,7 @@ export default function ShowPage({ params }: { params: { id: string } }) {
                 <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-90">
                     <button 
                         className="absolute top-4 right-4 text-white"
-                        onClick={clearSelection}
+                        onClick={() => setSelectedImage(null)}
                     >
                         <X className="w-6 h-6" />
                     </button>
@@ -147,7 +150,7 @@ export default function ShowPage({ params }: { params: { id: string } }) {
                     </div>
 
                     <div className="mb-8">
-                        <h2 className="text-2xl font-semibold mb-4 dark:text-white">Cast Principal</h2>
+                        <h2 className="text-2xl font-semibold mb-4 dark:text-white">Cast </h2>
                         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
                             {showDetails.credits.cast.slice(0, 8).map((actor) => (
                                 <div key={actor.id} className="text-center">
@@ -172,21 +175,44 @@ export default function ShowPage({ params }: { params: { id: string } }) {
                     </div>
 
                     <div className="mb-8">
-                        <h2 className="text-2xl font-semibold mb-4 dark:text-white">Images Principales</h2>
-                        <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-                            {showDetails.images.backdrops.map((image, index) => (
-                                <div 
-                                    key={index} 
-                                    className="cursor-pointer aspect-video rounded-lg overflow-hidden"
-                                    onClick={() => selectImage(image.file_path)}
+                        <h2 className="text-2xl font-semibold mb-4 dark:text-white">Principal Images</h2>
+                        <div className="relative">
+                            {showLeftButton && (
+                                <button 
+                                    onClick={() => scroll('left')}
+                                    className="absolute left-0 top-1/2 -translate-y-1/2 z-10 bg-black/50 hover:bg-black/75 text-white rounded-r-lg p-2"
                                 >
-                                    <img
-                                        src={`https://image.tmdb.org/t/p/w500${image.file_path}`}
-                                        alt={`Scene ${index + 1}`}
-                                        className="w-full h-full object-cover transform transition-transform duration-300 hover:scale-105"
-                                    />
-                                </div>
-                            ))}
+                                    <ChevronLeft className="w-6 h-6" />
+                                </button>
+                            )}
+                            
+                            <div 
+                                ref={scrollContainerRef}
+                                className="flex overflow-x-auto gap-4 scrollbar-hide scroll-smooth"
+                            >
+                                {showDetails.images.backdrops.map((image, index) => (
+                                    <div 
+                                        key={index} 
+                                        className="flex-none w-72 cursor-pointer aspect-video rounded-lg overflow-hidden"
+                                        onClick={() => setSelectedImage(image.file_path)}
+                                    >
+                                        <img
+                                            src={`https://image.tmdb.org/t/p/w500${image.file_path}`}
+                                            alt={`Scene ${index + 1}`}
+                                            className="w-full h-full object-cover transform transition-transform duration-300 hover:scale-105"
+                                        />
+                                    </div>
+                                ))}
+                            </div>
+
+                            {showRightButton && (
+                                <button 
+                                    onClick={() => scroll('right')}
+                                    className="absolute right-0 top-1/2 -translate-y-1/2 z-10 bg-black/50 hover:bg-black/75 text-white rounded-l-lg p-2"
+                                >
+                                    <ChevronRight className="w-6 h-6" />
+                                </button>
+                            )}
                         </div>
                     </div>
                 </div>
