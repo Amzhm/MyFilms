@@ -136,7 +136,7 @@ export default function MoviePage({ params }: { params: { id: string } }) {
                            <div className="aspect-video">
                                <iframe
                                    className="w-full h-full rounded-lg"
-                                   src={`https://www.youtube.com/embed/${trailer.key}`}
+                                   src={`https://www.youtube.com/embed/${trailer.key}?autoplay=1&mute=1`}
                                    title="Trailer"
                                    allowFullScreen
                                />
