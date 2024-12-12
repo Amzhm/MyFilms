@@ -188,7 +188,11 @@ export default function MoviePage({ params }: { params: { id: string } }) {
                            
                            <div 
                                ref={scrollContainerRef}
-                               className="flex overflow-x-auto gap-4 scrollbar-hide scroll-smooth"
+                               className="flex overflow-x-auto gap-4 scrollbar-hide scroll-smooth no-scrollbar"
+                               style={{ 
+                                msOverflowStyle: 'none',  /* IE and Edge */
+                                scrollbarWidth: 'none',   /* Firefox */
+                            }}
                            >
                                {movieDetails.images.backdrops.map((image, index) => (
                                    <div 
