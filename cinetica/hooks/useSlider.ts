@@ -34,7 +34,7 @@ export function useSlider({ scrollContainerRef }: UseSliderProps) {
     const container = scrollContainerRef.current;
     if (container) {
       container.addEventListener('scroll', handleScroll);
-      handleScroll(); // Check initial state
+      handleScroll();
       return () => container.removeEventListener('scroll', handleScroll);
     }
   }, [scrollContainerRef]);

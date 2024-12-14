@@ -35,7 +35,7 @@ export async function GET(
             }
         });
     } catch (error) {
-        console.error('Error fetching movie details:', error);
+        console.log('Error fetching movie details:', error);
         return NextResponse.json({ error: 'Error' }, { status: 500 });
     }
 }

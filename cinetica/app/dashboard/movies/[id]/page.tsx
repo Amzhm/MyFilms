@@ -56,6 +56,7 @@ export default function MoviePage({ params }: { params: { id: string } }) {
                    <div className="sticky top-24">
                        <div className="rounded-lg overflow-hidden shadow-lg">
                            <img
+                               data-testid="movie-poster"
                                src={`https://image.tmdb.org/t/p/w500${movieDetails.poster_path}`}
                                alt={movieDetails.title}
                                className="w-full h-auto"

@@ -17,7 +17,7 @@ export class AuthUseCase {
                 error: !result?.ok ? 'Identifiants incorrects' : undefined
             };
         } catch (e) {
-            console.error("Login error:", e);
+            console.log("Login error:", e);
             return {
                 success: false,
                 error: 'Erreur de connexion'

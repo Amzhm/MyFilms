@@ -32,7 +32,7 @@ export const Sidebar = ({ isCollapsed, setIsCollapsed, children }: SidebarProps)
         >
             <div className="p-4">
                 {isCollapsed && (
-                    <div className="flex flex-col items-center space-y-4">
+                    <div className="flex flex-col items-center space-y-4" data-testid="sidebarcol">
                         <button onClick={() => navigate('/dashboard')} className="p-2 rounded hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors duration-300">
                             <Film className="w-5 h-5" />
                         </button>

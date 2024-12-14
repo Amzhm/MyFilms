@@ -28,7 +28,7 @@ export function useInfiniteScroll<T>(fetchFunction: (page: number) => Promise<TM
             setCurrentPage(prev => prev + 1);
             setError(null);
         } catch (error) {
-            console.error('Failed to load more items:', error);
+            console.log('Failed to load more items:', error);
         } finally {
             setLoading(false);
         }

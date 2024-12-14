@@ -45,10 +45,11 @@ function DashboardLayoutContent({ children }: PropsWithChildren) {
         <div className="min-h-screen w-screen bg-white dark:bg-black text-neutral-900 dark:text-white overflow-hidden font-sans">
             {isMobile && !isCollapsed && (
                 <div 
-                    className="fixed inset-0 bg-black bg-opacity-50 z-40 transition-opacity duration-500 ease-in-out"
+                    className="fixed inset-0 bg-white dark:bg-black z-40 transition-opacity duration-500 ease-in-out"
                     onClick={toggleSidebar}
                 />
             )}
+            
 
             <div
                 className="min-h-screen w-full grid transition-all duration-500 ease-[cubic-bezier(0.4,0,0.2,1)] dark:bg-black"
@@ -68,9 +69,9 @@ function DashboardLayoutContent({ children }: PropsWithChildren) {
                                     className="p-2 mr-2 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors duration-300"
                                 >
                                     {isCollapsed ? (
-                                        <Menu className="w-6 h-6 text-gray-700 dark:text-white" />
+                                        <Menu className="w-6 h-6 text-gray-700 dark:text-white"  data-testid="menu"/>
                                     ) : (
-                                        <X className="w-6 h-6 text-gray-700 dark:text-white" />
+                                        <X className="w-6 h-6 text-gray-700 dark:text-white" data-testid="x"/>
                                     )}
                                 </button>
                                 <Link href="/dashboard" className="flex items-center space-x-2">
@@ -144,7 +145,7 @@ function DashboardLayoutContent({ children }: PropsWithChildren) {
                         z-50 lg:z-auto
                         h-full
                         bg-white dark:bg-black
-                        shadow-lg lg:shadow-none
+                        lg:shadow-none
                         ${isMobile ? 'top-[97px]' : 'top-[65px]'}
                         ${isMobile && isCollapsed ? '-translate-x-full' : 'translate-x-0'}
                         pointer-events-auto

@@ -23,6 +23,9 @@ export class MovieUseCase {
                     throw new Error(`Invalid category: ${category}`);
             }
         } catch (error) {
+            if (error instanceof Error) {
+                throw error;
+            }
             throw new Error(`Failed to fetch movies for category ${category}`);
         }
     }

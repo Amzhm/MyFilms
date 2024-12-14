@@ -7,6 +7,7 @@ import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { useShows } from '@/hooks/useShows';
 import { ShowCard } from '@/app/dashboard/components/ShowCard';
 import { useSlider } from '@/hooks/useSlider';
+import Link from 'next/link';
 
 type ShowCategory = 'top-rated' | 'popular' | 'on-the-air';
 
@@ -39,7 +40,9 @@ const ShowSlider = ({ category, title }: ShowSliderProps) => {
   return (
     <div className="space-y-4">
       <div className="flex justify-between items-center px-6">
-        <h2 className="text-xl font-bold text-neutral-800 dark:text-white">{title}</h2>
+      <Link href={`/dashboard/shows/${category}`} className="text-xl font-bold text-neutral-800 dark:text-white">
+          {title}
+        </Link>
         <a 
           href={`/dashboard/shows/${category}`} 
           className="text-sm text-blue-600 dark:text-blue-400 hover:underline"

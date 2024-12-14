@@ -15,6 +15,7 @@ export function MovieCard({ movie }: MovieCardProps) {
 
     return (
         <div 
+            data-testid="movie-card"
             onClick={handleClick}
             className="bg-white dark:bg-neutral-800 w-[100%] lg:w-full rounded-xl shadow-md overflow-hidden border border-neutral-200 dark:border-neutral-700 transition-transform duration-300 hover:scale-105 cursor-pointer"
         >

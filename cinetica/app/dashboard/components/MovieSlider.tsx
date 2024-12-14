@@ -7,6 +7,7 @@ import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { useMovies } from '@/hooks/useMovies';
 import { MovieCard } from '@/app/dashboard/components/MovieCard';
 import { useSlider } from '@/hooks/useSlider';
+import Link from 'next/link';
 
 type MovieCategory = 'top-rated' | 'popular' | 'now-playing';
 
@@ -39,7 +40,9 @@ const MovieSlider = ({ category, title }: MovieSliderProps) => {
   return (
     <div className="space-y-4">
       <div className="flex justify-between items-center px-6">
-        <h2 className="text-xl font-bold text-neutral-800 dark:text-white">{title}</h2>
+        <Link href={`/dashboard/movies/${category}`} className="text-xl font-bold text-neutral-800 dark:text-white">
+          {title}
+        </Link>
         <a 
           href={`/dashboard/movies/${category}`} 
           className="text-sm text-blue-600 dark:text-blue-400 hover:underline"
